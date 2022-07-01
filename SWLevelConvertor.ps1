@@ -1,6 +1,6 @@
 ﻿#Syndicate Wars Level Convertor by Moburma
 
-#VERSION 1.0
+#VERSION 1.1
 #LAST MODIFIED: 30/06/2022
 
 <#
@@ -177,7 +177,23 @@ levelwriter ($fpos+38) ($fpos+39)
 
 #write up to speed stat
 
-levelwriter ($fpos+40) ($fpos+55)
+levelwriter ($fpos+40) ($fpos+43)
+
+Add-content $outputfile -Value $zerobyte -Encoding Byte  #Zero out VX - leftover data in these three causes weird bugs for flying cars when they move
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+
+Add-content $outputfile -Value $zerobyte -Encoding Byte  #Zero out VY
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+
+Add-content $outputfile -Value $zerobyte -Encoding Byte  #Zero out VZ
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+
 
 #write speed stat from path index values
  
