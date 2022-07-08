@@ -13,6 +13,7 @@ Note input directory and output must be different (i.e. you cannot overwrite the
 For more information on some of the levels that can be converted, see the levels list here:
 
 https://tcrf.net/Syndicate_Wars_(DOS)#Unused_Levels
+https://tcrf.net/Notes:Syndicate_Wars_(DOS)#Level_File_Versions
 
 Data structure information from https://github.com/mefistotelis/swars-re-helpers
 
@@ -22,7 +23,7 @@ Data structure information from https://github.com/mefistotelis/swars-re-helpers
 * Character Flag2 data is not written/known. This is somewhat rarely used but for one is used to make characters invisible for various effects (e.g. aiming satellite rain at the player on levels where it seemingly comes from nowhere)
 * Character Health/Shield Energy/Energy/Stamina - not sure if these are all correct, they may be in the wrong order currently
 * Vehicles. A lot not known here: 
-* Vehicles get their health value from the armour stat. The location of this data is not known and currently is just set as 4 for all vehicles (from a range of what seems to be 1-6). Therefore some will be stronger/weaker than intended.
+* Vehicles seem to get their health value set in different ways, but is set here only via the value from the armour stat. The location of this data is not known and currently is just set as 4 for all vehicles (from a range of what seems to be 1-6). Therefore some will be stronger/weaker than intended.
 * Misc other fields may be wrong without obvious effect but may cause bugs in levels.
 
-It's recommended you also use the sister script https://github.com/Moburma/SWLevelReader in conjunction with this one. That script can identify corrupt levels (a few levels shipped with the game are corrupt, e.g. c036l004.dat) and assist with reverse engineering, as well as confirm if a level has been converted successfully.
+It's recommended you also use the sister script https://github.com/Moburma/SWLevelReader in conjunction with this one. That script can identify corrupt levels (a few levels shipped with the game are corrupt, e.g. C045L015.D3, C046L008.DAT) and assist with reverse engineering, as well as confirm if a level has been converted successfully.
