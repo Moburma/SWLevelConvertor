@@ -1,7 +1,7 @@
 ﻿#Syndicate Wars Level Convertor by Moburma
 
-#VERSION 1.1
-#LAST MODIFIED: 30/06/2022
+#VERSION 1.2
+#LAST MODIFIED: 05/08/2022
 
 <#
 .SYNOPSIS
@@ -116,13 +116,14 @@ write-host "Nothing to do - Exiting"
 exit
 }
 
+$file = Split-Path $filename -leaf
 
 $header = $levfile[1..5]
 
 #write new version number so file can't be converted again by accident
 
 $newversion = [byte[]] $varray = 0x00  #init blank array first or it will fail
-$newversion = [byte[]] $varray = 17
+$newversion = [byte[]] $varray = 16    #Set version 16, NOT 17, as this dictates vehicle health behaviour
 Set-Content $outputfile -Value $newversion -Encoding Byte
 
 #write header
@@ -203,7 +204,13 @@ levelwriter ($fpos+76) ($fpos+77)
    
 levelwriter ($fpos+78) ($fpos+79)
 
-levelwriter ($fpos+60) ($fpos+67)
+#write Owner from Lastdist values
+
+levelwriter ($fpos+100) ($fpos+101)
+
+#continue to Flag2
+
+levelwriter ($fpos+62) ($fpos+67)
 
 Add-content $outputfile -Value $zerobyte -Encoding Byte  #Zero out Flag2 as it causes invisible NPCs!
 Add-content $outputfile -Value $zerobyte -Encoding Byte
@@ -224,11 +231,10 @@ $bytes = $levfile[$fpos+86]
 
 Add-content $outputfile -Value $bytes -Encoding Byte
 
-#write effective group.. this is wrong, need to find out where this data really is, but will do for now. Byte 82  fpos 81
-$bytes = $levfile[$fpos+81]
+#write effective group.. this is wrong just copying group above, ot sure it exists in the early format, but will do for now. Byte 82  fpos 81
+$bytes = $levfile[$fpos+86]
 
 Add-content $outputfile -Value $bytes -Encoding Byte
-
 
 #write comhead with data that is in bumpmode in early format. Byte 84  fpos 83
 
@@ -238,19 +244,46 @@ levelwriter ($fpos+92) ($fpos+93)
 
 levelwriter ($fpos+108) ($fpos+109)
 
-#output until bump mode to blank that. Byte 92
+#Blank SpecialTimer as it's got group info here TODO find real data 
 
-levelwriter ($fpos+86) ($fpos+91)
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+
+#Blank Angle
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+
+#Blank WeaponTurn - TODO not sure what this is
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+
+#Blank Brightness
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+
+#Blank ComRange
+Add-content $outputfile -Value $zerobyte -Encoding Byte
 
 #Blank Bumpmode as the data is group membership and therefore wrong. Need to find real values if they exist. Byte 93
 
 Add-content $outputfile -Value $zerobyte -Encoding Byte
 
+#Continue until lastdist 
+
+levelwriter ($fpos+93) ($fpos+99)
+
+#Blank LastDist aas it has owner data
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+Add-content $outputfile -Value $zerobyte -Encoding Byte
+
+#Continue until animmode 
+
+levelwriter ($fpos+102) ($fpos+107)
+
+#Blank Animmode as it contains comcurrent data
+
+Add-content $outputfile -Value $zerobyte -Encoding Byte
 
 #Continue until bad umod data
-$var1 = $fpos + 93
-$var2 = $fpos + 111
-levelwriter ($fpos+93) ($fpos+111)
+
+levelwriter ($fpos+109) ($fpos+111)
 
 #Zero bytes 113 and 114 (UMOD) as they usually make all characters invincible!
 Add-content $outputfile -Value $zerobyte -Encoding Byte
@@ -265,8 +298,7 @@ Add-content $outputfile -Value $zerobyte -Encoding Byte
 Add-content $outputfile -Value $zerobyte -Encoding Byte
 
 #Continue until maxhealth. Byte 126
-$var1 = $fpos + 118
-$var2 = $fpos + 125
+
 levelwriter ($fpos+118) ($fpos+125)
 
 #write maxhealth from person11. Probably doesn't need to come from here, but just in case they are different. Byte 128
@@ -282,7 +314,7 @@ Else{
 Add-content $outputfile -Value $zerobyte -Encoding Byte
 Add-content $outputfile -Value $zerobyte -Encoding Byte   #byte 130
 
-#Set shieldenergy. Byte #byte 132
+#Set shieldenergy. Byte 132
 
 levelwriter ($fpos+132) ($fpos+133)
 
@@ -315,8 +347,7 @@ Else{
 }
 
 #Continue until weapons definition. Byte 144
-$var1 = $fpos + 140
-$var2 = $fpos + 143
+
 levelwriter ($fpos+140) ($fpos+143)
 
 #Set Maxshieldenergy. Byte 146
@@ -339,8 +370,9 @@ levelwriter ($fpos+152) ($fpos+159)
 
 if($thingtype -eq 2){ # If a vehicle, copy the values from health/uniqueid to here, this is where vehicle health needs to be
 
-    $vehiclearmour = [System.Convert]::ToString(4,16) -as [Byte]   #set armour to 4 for vehicles
-    Add-content $outputfile -Value $vehiclearmour -Encoding Byte
+   # $vehiclearmour = [System.Convert]::ToString(4,16) -as [Byte]   #set armour to 4 for vehicles
+   # Add-content $outputfile -Value $vehiclearmour -Encoding Byte
+    Add-content $outputfile -Value $zerobyte -Encoding Byte #In version 16 and lower vehicle health not set in armour field
     Add-content $outputfile -Value $zerobyte -Encoding Byte #Blank out bytes of stamina. 
     
     #Set maxstamina based on uniqueid value. 
@@ -357,7 +389,7 @@ levelwriter ($fpos+88) ($fpos+91)
 
 #finished basic char data
 
-if ($thingtype -eq 2){  #Vehicles an extra 36 bytes of data in their character definition. This contains model starting orientation 
+if ($thingtype -eq 2){  #Vehicles have an extra 36 bytes of data in their character definition. This contains model starting orientation 
 #write-host "vehicle detected"
 
 #Dump vehicle data
