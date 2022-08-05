@@ -12,7 +12,7 @@ Note input directory and output must be different (i.e. you cannot overwrite the
 
 For more information on some of the levels that can be converted, see the levels list here:
 
-https://tcrf.net/Syndicate_Wars_(DOS)#Unused_Levels
+https://tcrf.net/Syndicate_Wars_(DOS)#Unused_Levels</br>
 
 https://tcrf.net/Notes:Syndicate_Wars_(DOS)#Level_File_Versions
 
