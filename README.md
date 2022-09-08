@@ -4,11 +4,15 @@ Powershell 5 script to convert unplayable pre-alpha level files (file format ver
 
 ## Usage
 
-Run with SWLevelconvertor.ps1 {filename} {output directory}
+Run with SWLevelconvertor.ps1 {filename} {output directory} [-unguidedhair]
 
 e.g. SWLevelReader.ps1 "D:\games\Syndicate Wars\Levels\C006L001.DAT" D:games\swars
 
+e.g. SWLevelReader.ps1 "D:\games\Syndicate Wars\Levels\C006L001.DAT" D:games\swars -unguidedhair
+
 Note input directory and output must be different (i.e. you cannot overwrite the file you are converting)
+
+-unguidedhair is an optional switch that overrides what was set in the source file to randomly choose different hair colours/styles for female unguided, something rarely used in the final game.
 
 For more information on some of the levels that can be converted, see the levels list here:
 
