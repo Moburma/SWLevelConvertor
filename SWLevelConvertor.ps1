@@ -1,7 +1,7 @@
 ﻿#Syndicate Wars Level Convertor by Moburma
 
-#VERSION 1.2
-#LAST MODIFIED: 05/08/2022
+#VERSION 1.3
+#LAST MODIFIED: 08/09/2022
 
 <#
 .SYNOPSIS
@@ -16,11 +16,13 @@
    
    The pre-alpha level file to open. E.g. C001L007.DAT
 
-
 .PARAMETER Outputdir
    
    The directory to place the converted file. Must not be the same as source file directory!
 
+.PARAMETER unguidedhair
+
+    Switch to enable optional feature of giving female unguided random hair colours
 
 .RELATED LINKS
     
@@ -29,7 +31,7 @@
     
 #>
 
-Param ($filename, $outputdir)
+Param ($filename, $outputdir,  [switch] $unguidedhair)
 
 $levfile = Get-Content $filename -Encoding Byte -ReadCount 0
 
@@ -145,6 +147,7 @@ DO
 $type = $levfile[$fpos+8]
 $thingtype = $levfile[$fpos+9]
 $state = convert16bitint $levfile[$fpos+10] $levfile[$fpos+11]
+$hairtype = [byte[]] $vaarray = 0x00 #init array
 $vehiclearmour = [byte[]] $vaarray = 0x00 #init array
 $counter = $counter+1
 
@@ -293,9 +296,36 @@ Add-content $outputfile -Value $zerobyte -Encoding Byte
 
 levelwriter ($fpos+114) ($fpos+115)
 
+
+if($unguidedhair -eq $true -and $type -eq 3){ #set female unguideds to have random hair colours
+
+    $hairrandom = Get-Random -Minimum 0 -Maximum 10
+
+    if ($hairrandom -eq 1 -or $hairrandom -eq 2){
+    $hairtype = [byte[]] $vaarray = 0x01 # Blonde hair
+    Add-content $outputfile -Value $hairtype -Encoding Byte
+    Add-content $outputfile -Value $zerobyte -Encoding Byte
+    write-host "Female punk - setting blonde hair"
+    }
+    elseif ($hairrandom -eq 3 -or $hairrandom -eq 4){
+    $hairtype = [byte[]] $vaarray = 0x02 # Blue hair
+    Add-content $outputfile -Value $hairtype -Encoding Byte
+    Add-content $outputfile -Value $zerobyte -Encoding Byte
+    write-host "Female punk - setting blue hair"
+    }
+    Else{   #Normal red hair
+    Add-content $outputfile -Value $zerobyte -Encoding Byte
+    Add-content $outputfile -Value $zerobyte -Encoding Byte
+    write-host "Female punk - setting normal hair"
+    }
+
+}
+
+Else{
 #Blank bytes 117 and 118 as they put bad data into Frameid value that causes weird missing body parts for characters
 Add-content $outputfile -Value $zerobyte -Encoding Byte
 Add-content $outputfile -Value $zerobyte -Encoding Byte
+}
 
 #Continue until maxhealth. Byte 126
 
