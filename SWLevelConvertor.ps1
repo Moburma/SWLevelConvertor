@@ -54,6 +54,14 @@ write-host "Example: SWLevelconvertor.ps1 C001L007.DAT D:/games/swars"
 exit
 }
 
+
+if ($outputdir -eq $null){
+write-host "Error - No output directory provided. Please supply a target directory to write to!"
+write-host ""
+write-host "Example: SWLevelconvertor.ps1 C001L007.DAT D:/games/swars"
+exit
+}
+
 if ((Test-Path -Path $outputdir ) -eq 0){
 write-host "Error - No output directory with that name found. Please supply an output directory to write the converted level to"
 write-host ""
