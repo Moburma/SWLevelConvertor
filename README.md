@@ -6,9 +6,9 @@ Powershell 5 script to convert unplayable pre-alpha level files (file format ver
 
 Run with SWLevelconvertor.ps1 {filename} {output directory} [-unguidedhair]
 
-e.g. SWLevelReader.ps1 "D:\games\Syndicate Wars\Levels\C006L001.DAT" D:games\swars
+e.g. SWLevelconvertor.ps1 "D:\games\Syndicate Wars\Levels\C006L001.DAT" D:games\swars
 
-e.g. SWLevelReader.ps1 "D:\games\Syndicate Wars\Levels\C006L001.DAT" D:games\swars -unguidedhair
+e.g. SWLevelconvertor.ps1 "D:\games\Syndicate Wars\Levels\C006L001.DAT" D:games\swars -unguidedhair
 
 Note input directory and output must be different (i.e. you cannot overwrite the file you are converting)
 
